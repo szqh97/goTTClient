@@ -1,6 +1,7 @@
 package ClientConn
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -39,6 +40,18 @@ func (cn *ClientConn) GetMsgServerInfo() (err error) {
 		defer response.Body.Close()
 		body, _ := ioutil.ReadAll(response.Body)
 		fmt.Printf("%s", body)
+		var msgserverInfo interface{}
+		err := json.Unmarshal(body, &msgserverInfo)
+		checkerr(err)
+		m := msgserverInfo.(map[string]interface{})
+		if str, ok := m["priorIp"].(string); ok {
+			cn.msgServerIP = str
+		}
+		if str, ok := m["port"].(string); ok {
+			cn.msgServerPort = str
+		}
 	}
+	fmt.Println(*cn)
+
 	return nil
 }
