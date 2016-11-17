@@ -2,7 +2,6 @@ package ClientConn
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -28,7 +27,6 @@ func NewClientConn(username, password, loginServer string) *ClientConn {
 		password:    password,
 		loginServer: loginServer,
 	}
-
 }
 
 func (cn *ClientConn) GetMsgServerInfo() (err error) {
@@ -39,7 +37,7 @@ func (cn *ClientConn) GetMsgServerInfo() (err error) {
 	if response.StatusCode == 200 {
 		defer response.Body.Close()
 		body, _ := ioutil.ReadAll(response.Body)
-		fmt.Printf("%s", body)
+		log.Printf("%s", body)
 		var msgserverInfo interface{}
 		err := json.Unmarshal(body, &msgserverInfo)
 		checkerr(err)
@@ -51,7 +49,7 @@ func (cn *ClientConn) GetMsgServerInfo() (err error) {
 			cn.msgServerPort = str
 		}
 	}
-	fmt.Println(*cn)
+	log.Print(*cn)
 
 	return nil
 }
